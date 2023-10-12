@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+// Simple Multiplication
 int main()
 {
     float width, length;
