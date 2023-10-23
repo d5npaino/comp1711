@@ -17,6 +17,8 @@ EVERY CHANGE NEEDS TO BE SAVED AND RE-COMPILED
 %d - decimal int
 %f - floating point number
 
+To specify a certain number of decimal points, use '%.3f' - Where 3 is the num of desired decimal points
+
 #include <math.h> - library required for mathematical functions
 
  ~# git add -A #~
