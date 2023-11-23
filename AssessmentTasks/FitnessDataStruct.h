@@ -4,7 +4,7 @@
 #include <math.h>
 
 // declaring this value so I can use it in different places
-#define buffer_size 100
+#define buffer_size 200
 
 /**
  * @brief Struct to hold each daily reading, contains the date as a string
@@ -17,6 +17,13 @@ typedef struct
     float bloodIron;
 } reading;
 
+typedef struct
+{
+    char date[11];
+    char time[6];
+    int steps;
+} FITNESS_DATA;
+
 /**
  * @brief Adapted version of the tokeniseRecord function which you should now be familiar with - this one is adapted for this data file
  *        as it has fewer outputs and gives you the bloodIron as a float
@@ -27,7 +34,7 @@ typedef struct
  * @param bloodIron the place where the bloodIron will be stored.
  */
 void tokeniseRecord(const char *input, const char *delimiter,
-                    char *date, float *bloodIron)
+                    char *date, char *time, char *steps)
 {
     // Create a copy of the input string as strtok modifies the string
     char *inputCopy = strdup(input);
@@ -42,9 +49,13 @@ void tokeniseRecord(const char *input, const char *delimiter,
     token = strtok(NULL, delimiter);
     if (token != NULL)
     {
-        // turns the blood iron into a float - similar to atoi().
-        // we have to tell C that bloodIron is a pointer so it stores it.
-        *bloodIron = atof(token);
+        strcpy(time, token);
+    }
+
+    token = strtok(NULL, delimiter);
+    if (token != NULL)
+    {
+        strcpy(steps, token);
     }
 
     // Free the duplicated string
@@ -65,8 +76,8 @@ FILE *open_file(char *filename, char *mode)
     FILE *file = fopen(filename, *mode);
     if (file == NULL)
     {
-        printf("could not open file\n");
-        return NULL;
+        printf("Error: could not open file\n");
+        return 1;
     }
     return file;
 }

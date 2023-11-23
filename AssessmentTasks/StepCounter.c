@@ -2,11 +2,13 @@
 
 int main()
 {
-    // array of daily readings
-    reading daily_readings[100];
-
+    FITNESS_DATA records[500];
+    // default file just incase user crashes program
+    FILE *file = open_file("FitnessData_2023.csv", "r");
     char line[buffer_size];
     char filename[buffer_size];
+
+    char steps[100], time[6], date[11];
 
     // get filename from the user
     printf("Please enter the name of the data file: ");
@@ -23,10 +25,9 @@ int main()
 
     while (1)
     {
-        FILE *input = open_file(filename,"r");
-        
+        FILE *input = open_file(filename, "r");
 
-        printf("A: View all your blood iron levels\n");                       // BRONZE
+        printf("A: Enter filename to be imported\n");                         // BRONZE
         printf("B: View your average blood iron level\n");                    // BRONZE
         printf("C: View your lowest blood iron level\n");                     // SILVER
         printf("D: View your highest blood iron level\n");                    // SILVER
@@ -49,59 +50,73 @@ int main()
         // this allows for either capital or lower case
         case 'A':
         case 'a':
+            printf("Please enter the name of the data file: ");
+            // these lines read in a line from the stdin (where the user types)
+            // and then takes the actual string out of it
+            // this removes any spaces or newlines.
+            fgets(line, buffer_size, stdin);
+            sscanf(line, " %s ", filename);
+            open_file(filename, "r");
+
             counter = 0;
-            while (fgets(line, buffer_size, input))
+            while (fgets(line, buffer_size, file) != NULL)
             {
-                // split up the line and store it in the right place
-                // using the & operator to pass in a pointer to the bloodIron so it stores it
-                tokeniseRecord(line, ",", daily_readings[counter].date, &daily_readings[counter].bloodIron);
+                tokeniseRecord(line, ",", date, time, steps);
+                strcpy(records[counter].date, date);
+                strcpy(records[counter].time, time);
+                records[counter].steps = atoi(steps);
                 counter++;
             }
-            for (int i = 0; i < counter; i++)
-            {
-                printf("%s - Blood iron: %.1f\n", daily_readings[i].date, daily_readings[i].bloodIron);
-            }
-            fclose(input);
+            return 1;
             break;
 
         case 'B':
         case 'b':
-            counter = 0;
-            while (fgets(line, buffer_size, input))
-            {
-                // split up the line and store it in the right place
-                // using the & operator to pass in a pointer to the bloodIron so it stores it
-                tokeniseRecord(line, ",", daily_readings[counter].date, &daily_readings[counter].bloodIron);
-                mean += daily_readings[counter].bloodIron;
-                counter++;
-            }
-            mean /= counter;
-            printf("Your average blood iron was %.2f\n", mean);
-            fclose(input);
+            printf("Total records: %d\n", counter);
+            fclose(file);
             break;
 
         case 'C':
         case 'c':
-            return 0;
+            int position = 0, lowStep = 99999;
+            for (int i = 0; i < counter; i++)
+            {
+                if (records[i].steps < lowStep)
+                {
+                    lowStep = records[i].steps;
+                    position = i;
+                }
+            }
+            printf("Fewest Steps: %s %s\n", records[position].date, records[position].time);
             break;
 
         case 'D':
         case 'd':
-            return 0;
+            int position = 0, highStep = 0;
+            for (int i = 0; i < counter; i++)
+            {
+                if (records[i].steps > lowStep)
+                {
+                    highStep = records[i].steps;
+                    position = i;
+                }
+            }
+            printf("Largest Steps: %s %s\n", records[position].date, records[position].time);
             break;
 
         case 'E':
         case 'e':
-            return 0;
+            int mean = 0;
+            for (int i = 0; i < counter; i++)
+            {
+                    mean += records[i].steps;
+            }
+            mean /= counter; // CHECK THIS TO SEE IF ROUNDS UP
+            printf("Largest Steps: %s %s\n", records[position].date, records[position].time);
             break;
 
         case 'F':
         case 'f':
-            return 0;
-            break;
-
-        case 'G':
-        case 'g':
             return 0;
             break;
 
