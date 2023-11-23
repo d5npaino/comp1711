@@ -7,33 +7,22 @@ int main()
     FILE *file = open_file("FitnessData_2023.csv", "r");
     char line[buffer_size];
     char filename[buffer_size];
-
     char steps[100], time[6], date[11];
-
-    // get filename from the user
-    printf("Please enter the name of the data file: ");
-
-    // these lines read in a line from the stdin (where the user types)
-    // and then takes the actual string out of it
-    // this removes any spaces or newlines.
-    fgets(line, buffer_size, stdin);
-    sscanf(line, " %s ", filename);
-
     char choice;
     int counter = 0;
-    float mean = 0;
 
     while (1)
     {
-        FILE *input = open_file(filename, "r");
-
-        printf("A: Enter filename to be imported\n");                         // BRONZE
-        printf("B: View your average blood iron level\n");                    // BRONZE
-        printf("C: View your lowest blood iron level\n");                     // SILVER
-        printf("D: View your highest blood iron level\n");                    // SILVER
-        printf("E: View the blood iron levels for a specific month\n");       // SILVER/GOLD
-        printf("F: See some additional statistics about your iron levels\n"); // GOLD - see readme.md
-        printf("G: Generate a graph of your iron levels\n");                  // GOLD/PLATINUM - see readme.md
+        int position = 0;
+        int lowStep = 99999;
+        int highStep = 0;
+        int mean = 0;
+        printf("A: Enter filename to be imported\n");
+        printf("B: Display total number of records in the file\n");
+        printf("C: View the date and time of the timeslot with the fewest steps\n");
+        printf("D: View the data and time of the timeslot with the largest number of steps\n");
+        printf("E: View the mean step count of all the records in the file\n");
+        printf("F: View the mean step count of all the records in the file\n");
         printf("Q: Exit the program\n");
 
         // get the next character typed in and store in the 'choice'
@@ -56,18 +45,22 @@ int main()
             // this removes any spaces or newlines.
             fgets(line, buffer_size, stdin);
             sscanf(line, " %s ", filename);
-            open_file(filename, "r");
-
             counter = 0;
-            while (fgets(line, buffer_size, file) != NULL)
+            if (open_file(filename, "r") != NULL)
             {
-                tokeniseRecord(line, ",", date, time, steps);
-                strcpy(records[counter].date, date);
-                strcpy(records[counter].time, time);
-                records[counter].steps = atoi(steps);
-                counter++;
+                while (fgets(line, buffer_size, file) != NULL)
+                {
+                    tokeniseRecord(line, ",", date, time, steps);
+                    strcpy(records[counter].date, date);
+                    strcpy(records[counter].time, time);
+                    records[counter].steps = atoi(steps);
+                    counter++;
+                }
             }
-            return 1;
+            else
+            {
+                return 1;
+            }
             break;
 
         case 'B':
@@ -78,7 +71,6 @@ int main()
 
         case 'C':
         case 'c':
-            int position = 0, lowStep = 99999;
             for (int i = 0; i < counter; i++)
             {
                 if (records[i].steps < lowStep)
@@ -92,10 +84,9 @@ int main()
 
         case 'D':
         case 'd':
-            int position = 0, highStep = 0;
             for (int i = 0; i < counter; i++)
             {
-                if (records[i].steps > lowStep)
+                if (records[i].steps > highStep)
                 {
                     highStep = records[i].steps;
                     position = i;
@@ -106,10 +97,9 @@ int main()
 
         case 'E':
         case 'e':
-            int mean = 0;
             for (int i = 0; i < counter; i++)
             {
-                    mean += records[i].steps;
+                mean += records[i].steps;
             }
             mean /= counter; // CHECK THIS TO SEE IF ROUNDS UP
             printf("Largest Steps: %s %s\n", records[position].date, records[position].time);
