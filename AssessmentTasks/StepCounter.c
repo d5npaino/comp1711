@@ -39,7 +39,7 @@ int main()
         // this allows for either capital or lower case
         case 'A':
         case 'a':
-            printf("Please enter the name of the data file: ");
+            printf("\nPlease enter the name of the data file:\n");
             // these lines read in a line from the stdin (where the user types)
             // and then takes the actual string out of it
             // this removes any spaces or newlines.
@@ -65,7 +65,7 @@ int main()
 
         case 'B':
         case 'b':
-            printf("Total records: %d\n", counter);
+            printf("\nTotal records: %d\n", counter);
             fclose(file);
             break;
 
@@ -79,7 +79,7 @@ int main()
                     position = i;
                 }
             }
-            printf("Fewest Steps: %s %s\n", records[position].date, records[position].time);
+            printf("\nFewest Steps: %s %s\n", records[position].date, records[position].time);
             break;
 
         case 'D':
@@ -92,7 +92,7 @@ int main()
                     position = i;
                 }
             }
-            printf("Largest Steps: %s %s\n", records[position].date, records[position].time);
+            printf("\nLargest Steps: %s %s\n", records[position].date, records[position].time);
             break;
 
         case 'E':
@@ -101,12 +101,13 @@ int main()
             {
                 mean += records[i].steps;
             }
-            mean /= counter; // CHECK THIS TO SEE IF ROUNDS UP
-            printf("Largest Steps: %s %s\n", records[position].date, records[position].time);
+            mean = (mean + (counter / 2)) / counter; // Use of (counter / 2) to make sure instead of truncating value, it rounds up
+            printf("\nMean Number of Steps: %d\n", mean);
             break;
 
         case 'F':
         case 'f':
+        // DO MEEEEEEEEEEEEEEEE
             return 0;
             break;
 
@@ -117,8 +118,9 @@ int main()
 
         // if they type anything else:
         default:
-            printf("Invalid choice\n");
+            printf("\nInvalid choice\n");
             break;
         }
+        printf("\n");
     }
 }

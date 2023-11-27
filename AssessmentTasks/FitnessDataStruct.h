@@ -8,12 +8,6 @@
 
 typedef struct
 {
-    char date[20];
-    float bloodIron;
-} reading;
-
-typedef struct
-{
     char date[11];
     char time[6];
     int steps;
@@ -59,22 +53,22 @@ FILE *open_file(char *filename, char *mode)
     return file;
 }
 
-int find_mean(reading *dataArray, int numReadings)
+int find_mean(FITNESS_DATA *dataArray, int numReadings)
 {
     // to do
 }
 
-int find_highest(reading *dataArray, int numReadings)
+int find_highest(FITNESS_DATA *dataArray, int numReadings)
 {
     // to do
 }
 
-int find_lowest(reading *dataArray, int numReadings)
+int find_lowest(FITNESS_DATA *dataArray, int numReadings)
 {
     // to do
 }
 
-void continuousSteps(reading *dataArray, int numReadings)
+void continuousSteps(FITNESS_DATA *dataArray, int numReadings)
 {
     // to do
 }
