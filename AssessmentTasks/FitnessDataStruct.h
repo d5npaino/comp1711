@@ -4,7 +4,7 @@
 #include <math.h>
 
 // declaring this value so I can use it in different places
-#define buffer_size 200
+#define buffer_size 500
 
 typedef struct
 {

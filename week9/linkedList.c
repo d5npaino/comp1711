@@ -53,6 +53,7 @@ int length(node *linked_list)
 {
     int counter = 1;
     node *current = linked_list;
+    // passing by reference
     while (current->next != NULL)
     {
         current = current->next;

@@ -17,13 +17,15 @@ int main()
         int lowStep = 99999;
         int highStep = 0;
         int mean = 0;
-        printf("A: Enter filename to be imported\n");
-        printf("B: Display total number of records in the file\n");
-        printf("C: View the date and time of the timeslot with the fewest steps\n");
-        printf("D: View the data and time of the timeslot with the largest number of steps\n");
-        printf("E: View the mean step count of all the records in the file\n");
-        printf("F: View the mean step count of all the records in the file\n");
-        printf("Q: Exit the program\n");
+        int count = 0;
+        int tempCount = 0;
+        printf("A: Specify the filename to be imported\n");
+        printf("B: Display the total number of records in the file\n");
+        printf("C: Find the date and time of the timeslot with the fewest steps\n");
+        printf("D: Find the data and time of the timeslot with the largest number of steps\n");
+        printf("E: Find the mean step count of all the records in the file\n");
+        printf("F: Find the longest continuous period where the step count is above 500 steps\n");
+        printf("Q: Exit\n");
 
         // get the next character typed in and store in the 'choice'
         choice = getchar();
@@ -39,10 +41,7 @@ int main()
         // this allows for either capital or lower case
         case 'A':
         case 'a':
-            printf("\nPlease enter the name of the data file:\n");
-            // these lines read in a line from the stdin (where the user types)
-            // and then takes the actual string out of it
-            // this removes any spaces or newlines.
+            printf("Please enter the name of the data file:\n");
             fgets(line, buffer_size, stdin);
             sscanf(line, " %s ", filename);
             counter = 0;
@@ -59,13 +58,14 @@ int main()
             }
             else
             {
+                printf("Error: could not open file\n");
                 return 1;
             }
             break;
 
         case 'B':
         case 'b':
-            printf("\nTotal records: %d\n", counter);
+            printf("Total records: %d\n", counter);
             fclose(file);
             break;
 
@@ -79,7 +79,7 @@ int main()
                     position = i;
                 }
             }
-            printf("\nFewest Steps: %s %s\n", records[position].date, records[position].time);
+            printf("Fewest Steps: %s %s\n", records[position].date, records[position].time);
             break;
 
         case 'D':
@@ -92,7 +92,7 @@ int main()
                     position = i;
                 }
             }
-            printf("\nLargest Steps: %s %s\n", records[position].date, records[position].time);
+            printf("Largest Steps: %s %s\n", records[position].date, records[position].time);
             break;
 
         case 'E':
@@ -102,13 +102,29 @@ int main()
                 mean += records[i].steps;
             }
             mean = (mean + (counter / 2)) / counter; // Use of (counter / 2) to make sure instead of truncating value, it rounds up
-            printf("\nMean Number of Steps: %d\n", mean);
+            printf("Mean Number of Steps: %d\n", mean);
             break;
 
         case 'F':
         case 'f':
-        // DO MEEEEEEEEEEEEEEEE
-            return 0;
+            for (int i = 0; i < counter; i++)
+            {
+                if (records[i].steps > 500)
+                {
+                    tempCount++;
+                }
+                else
+                {
+                    if (tempCount > count)
+                    {
+                        count = tempCount;
+                        position = i - count;
+                    }
+                    tempCount = 0;
+                }
+            }
+            printf("Longest period start: %s %s\n", records[position].date, records[position].time);
+            printf("Longest period end: %s %s\n", records[position + count - 1].date, records[position + count - 1].time);
             break;
 
         case 'Q':
@@ -118,7 +134,7 @@ int main()
 
         // if they type anything else:
         default:
-            printf("\nInvalid choice\n");
+            printf("Invalid choice\n");
             break;
         }
         printf("\n");
